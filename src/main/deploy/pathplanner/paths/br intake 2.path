@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.913395149786019,
+        "y": 0.6644793152639112
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.913395149786019,
+        "y": 0.664479315263911
+      },
+      "isLocked": false,
+      "linkedName": "br shoot spot up"
+    },
+    {
+      "anchor": {
+        "x": 7.8,
+        "y": 0.664
+      },
+      "prevControl": {
+        "x": 6.800000000000001,
+        "y": 0.6639999999999999
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "br line up intake 2"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 540.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 90.0
+  },
+  "reversed": false,
+  "folder": "Blue 2",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 90.0
+  },
+  "useDefaultConstraints": true
+}
