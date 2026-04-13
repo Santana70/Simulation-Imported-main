@@ -49,55 +49,82 @@ public final class Constants
     public static final double TURN_CONSTANT    = 6;
   }
 public static final class IntakeConstants {
-  public static final int PIVOT_MOTOR_ID = 20;
-  public static final boolean PIVOT_INVERTED = true;
-  public static final int PIVOT_CURRENT_LIMIT = 30;
 
-  // Gear ratio: 128 motor rotations : 1 pivot rotation
-  public static final double PIVOT_GEAR_RATIO = 200.0;
+    // Limit switches
+  public static final int SLIDER_FORWARD_LIMIT_DIO = 0;
+  public static final int SLIDER_REVERSE_LIMIT_DIO = 1;
 
-  // Encoder conversion
-  public static final double PIVOT_DEG_PER_MOTOR_ROT = 360.0 / PIVOT_GEAR_RATIO;   // 2.8125 deg
-  public static final double PIVOT_DEG_PER_SEC_PER_RPM = PIVOT_DEG_PER_MOTOR_ROT / 60.0;
+  // Set these based on your wiring:
+  // true = pressed reads false (common for normally closed wiring)
+  // false = pressed reads true
 
-  // PID to start with
-  public static final double PIVOT_kP = 0.035;
-  public static final double PIVOT_kI = 0.0;
-  public static final double PIVOT_kD = 0.0;
+  public static final boolean SLIDER_FORWARD_LIMIT_INVERTED = true;
+  public static final boolean SLIDER_REVERSE_LIMIT_INVERTED = true;
+  public static final int SLIDER_MOTOR_ID = 20;
+  public static final boolean SLIDER_INVERTED = false;
+  public static final int SLIDER_CURRENT_LIMIT = 50;
 
-  // Output clamp for closed-loop
-  public static final double PIVOT_MIN_OUTPUT = -1;
-  public static final double PIVOT_MAX_OUTPUT = 1;
+ // Rack-and-pinion slider geometry
+  public static final double PINION_TOOTH_COUNT = 60.0;
+  public static final double PINION_PITCH_DIAMETER_IN = 2.5;
 
-  // Tolerance
-  public static final double PIVOT_TOLERANCE_DEG = 2.0;
+  // Gear reduction: motor spins 8 times for 1 pinion rotation
+  public static final double MOTOR_TO_PINION_RATIO = 8.0;
 
-  // Soft limits in pivot degrees from your manually-set zero
-  public static final double PIVOT_MIN_ANGLE_DEG = -1000000.0;
-  public static final double PIVOT_MAX_ANGLE_DEG = 100000.0;
+  // Linear slider travel in inches for one motor rotation
+  public static final double SLIDER_POSITION_PER_MOTOR_ROTATION =
+      (Math.PI * PINION_PITCH_DIAMETER_IN) / MOTOR_TO_PINION_RATIO; // 0.98175 in/rev
 
-  // Common setpoints
-  public static final double PIVOT_STOW_ANGLE_DEG = 0.0;
-  public static final double PIVOT_DEPLOY_ANGLE_DEG = 90.0;
-  public static final double PIVOT_FEED_ANGLE_DEG = 30.0;
+  // Slider velocity in inches/sec for 1 motor RPM
+  public static final double SLIDER_VELOCITY_PER_RPM =
+      SLIDER_POSITION_PER_MOTOR_ROTATION / 60.0; // 0.0163625 in/sec per RPM
 
-  // Manual jog power for manual override
-  public static final double PIVOT_MANUAL_POWER = 0.60;
+
+  // Closed-loop tuning
+  public static final double SLIDER_kP = 0.80;
+  public static final double SLIDER_kI = 0.0;
+  public static final double SLIDER_kD = 0.0;
+
+  // Closed-loop output limits
+  public static final double SLIDER_MIN_OUTPUT = -0.20;
+  public static final double SLIDER_MAX_OUTPUT = 0.4;
+
+  // Allowed slider travel range
+  public static final double SLIDER_MIN_POSITION = -1000;
+  public static final double SLIDER_MAX_POSITION = 1200;
+
+  public static final double SLIDER_STEP_INCHES = 2.0;
+
+  // Preset positions
+  public static final double SLIDER_RETRACTED_POSITION = 0.0;
+  public static final double SLIDER_EXTENDED_POSITION = 10.30;
+  public static final double SLIDER_FEED_POSITION = 4.0;
+
+  // Manual control
+  public static final double SLIDER_MANUAL_POWER = 0.20;
+  public static final double SLIDER_MANUAL_MAX_POWER = 0.20;
+
+  // Position tolerance
+  public static final double SLIDER_POSITION_TOLERANCE = .10;
+
+  // Current-based hard-stop detection
+  public static final double SLIDER_HARD_STOP_CURRENT_AMPS = 28.0;
+  public static final double SLIDER_HARD_STOP_DEBOUNCE_SEC = 0.2;
 }
 
   public static final class RollerConstants {
     public static final int ROLLER_MOTOR_ID = 22;  // TODO set
     public static final boolean ROLLER_INVERTED = true;
-    public static final int ROLLER_CURRENT_LIMIT = 50;
-    public static final double INTAKE_POWER = 0.75;
-    public static final double OUTTAKE_POWER = -0.75;
+    public static final int ROLLER_CURRENT_LIMIT = 55;
+    public static final double INTAKE_POWER = 0.80;
+    public static final double OUTTAKE_POWER = -0.5;
   }
 
   public static final class FeederConstants {
     public static final int INDEXER_MOTOR_ID = 13;   // TODO set
     public static final int SPINDEXER_MOTOR_ID = 15; // TODO set
     public static final boolean INDEXER_INVERTED = false;
-    public static final boolean SPINDEXER_INVERTED = true;
+    public static final boolean SPINDEXER_INVERTED = false;
     public static final int CURRENT_LIMIT = 35;
     public static final double FEED_POWER = 0.4;
     public static final double REVERSE_POWER = -0.20;
@@ -107,7 +134,7 @@ public static final class IntakeConstants {
     public static final int FLYWHEEL_MOTOR_ID = 24; // TODO set
     public static final boolean FLYWHEEL_INVERTED = false;
     public static final int CURRENT_LIMIT = 50;
-    public static final double SHOOT_POWER = 1.0;   // open-loop percent
+    public static final double SHOOT_POWER = 0.97;   // open-loop percent
     public static final double IDLE_POWER = 0.0;
   }
 

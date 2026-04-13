@@ -10,7 +10,8 @@
     "evil auto "
   ],
   "autoFolders": [
-    "Blue"
+    "LeftTrench",
+    "LeftBump"
   ],
   "defaultMaxVel": 4.0,
   "defaultMaxAccel": 4.0,

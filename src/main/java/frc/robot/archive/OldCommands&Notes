@@ -1,0 +1,511 @@
+========================================
+OLD COMMANDS AND REMOVED CODE NOTES
+========================================
+
+Purpose:
+This file stores old commands, commented-out code, experiments, and ideas
+that are not currently active on the robot but may be useful later.
+
+Rules:
+- Do NOT put old code back into active files as giant commented blocks.
+- Keep active robot files clean.
+- Store removed logic here with a short explanation.
+- Label whether code was tested, unfinished, or replaced.
+
+----------------------------------------
+SECTION 1: OLD TURRET / LIMELIGHT IDEAS
+----------------------------------------
+
+Reason removed:
+We no longer use the turret, so turret-based commands and bindings were removed
+from the active robot code to keep the project cleaner and easier to present.
+
+Old turret default command idea: 
+manual control with deadband and reduced speed.
+--------------------------------------------------
+turret.setDefaultCommand(
+    Commands.run(() -> {
+        double input = operator.getRightX();
+
+        if (Math.abs(input) < 0.05) {
+            turret.stop();
+            return;
+        }
+
+        turret.setOpenLoop(input * 0.5);
+    }, turret)
+);
+--------------------------------------------------
+
+Old turret POV bindings: 
+manual test of turret angle adjustments by 10 or 45 degrees.
+--------------------------------------------------
+driverXbox.povUp().onTrue(
+    Commands.runOnce(() -> turret.setTurretAngleDeg(turret.getTurretDeg() + 10), turret)
+);
+
+driverXbox.povDown().onTrue(
+    Commands.runOnce(() -> turret.setTurretAngleDeg(turret.getTurretDeg() - 10), turret)
+);
+
+driverXbox.povRight().onTrue(
+    Commands.runOnce(() -> turret.setTurretAngleDeg(turret.getTurretDeg() + 45), turret)
+);
+
+driverXbox.povLeft().onTrue(
+    Commands.runOnce(() -> turret.setTurretAngleDeg(turret.getTurretDeg() - 45), turret)
+);
+--------------------------------------------------
+
+Old turret aim-at-hub command: 
+uses getHubTarget() to find the hub position and aims the turret at it using field-relative aiming.
+--------------------------------------------------
+private Command aimTurretAtHubCommand() {
+  return Commands.run(() -> {
+    Translation2d hub = getHubTarget();
+    turret.aimAtFieldPoint(hub.getX(), hub.getY(), drivebase.getPose());
+  }, turret);
+}
+--------------------------------------------------
+
+Old limelight turret tracking idea: 
+This was a continuous command that aimed the turret at the hub using vision data while the left trigger was held.
+--------------------------------------------------
+operator.leftTrigger().whileTrue(
+    Commands.run(() -> {
+        Translation2d hub = getHubTarget();
+        turret.aimAtFieldPoint(hub.getX(), hub.getY(), drivebase.getPose());
+    }, turret)
+);
+--------------------------------------------------
+
+Old turret tracking command class used:
+- TrackTurretWithLimelight.java
+
+Notes:
+- This used Limelight yaw to steer the turret.
+- Removed because turret is no longer used.
+- Could still be useful later for another rotating mechanism.
+
+----------------------------------------
+SECTION 2: OLD SHOOTING COMMAND IDEAS
+----------------------------------------
+
+Reason removed:
+Older shooting commands were mixed with turret logic or intake shaking logic.
+The active project now uses simpler shooter commands.
+
+Old shoot command using pose distance:
+--------------------------------------------------
+private Command shootPoseCommand(DoubleSupplier distanceSupplier) {
+  return Commands.run(() -> {
+      double distance = distanceSupplier.getAsDouble();
+      SmartDashboard.putNumber("Shot/PoseDistance", distance);
+      double power = flywheel.getPowerForPoseDistance(distance);
+      SmartDashboard.putNumber("Shot/PosePowerCmd", power);
+      flywheel.setPower(power);
+    }, flywheel)
+    .alongWith(
+        Commands.sequence(
+            Commands.waitSeconds(1.5),
+            Commands.run(() -> feeder.feed(), feeder)
+        )
+    );
+}
+--------------------------------------------------
+
+Important note:
+This was once registered like this:
+--------------------------------------------------
+NamedCommands.registerCommand("Shoot", shootPoseCommand(null));
+--------------------------------------------------
+
+Why that was bad:
+- Passing null into a DoubleSupplier can cause a crash.
+- Do not do this again.
+- Always pass a real supplier or use a fixed-power shot command.
+
+Old shoot command using Limelight distance:
+--------------------------------------------------
+private Command shootLLCommand(DoubleSupplier distanceSupplier) {
+  return Commands.run(() -> {
+      double distance = distanceSupplier.getAsDouble();
+      SmartDashboard.putNumber("Shot/LLDistance", distance);
+      double power = flywheel.getPowerForLLDistance(distance);
+      SmartDashboard.putNumber("Shot/LLPowerCmd", power);
+      flywheel.setPower(power);
+    }, flywheel)
+    .alongWith(
+        Commands.sequence(
+            Commands.waitSeconds(0.5),
+            Commands.run(() -> feeder.feed(), feeder)
+        )
+    );
+}
+--------------------------------------------------
+
+Old generic shoot command:
+--------------------------------------------------
+private Command shootCommand(DoubleSupplier distanceSupplier) {
+  return Commands.run(() -> {
+      double distance = distanceSupplier.getAsDouble();
+      double power = flywheel.getPowerForDistance(distance);
+      flywheel.setPower(power);
+    }, flywheel)
+    .alongWith(
+        Commands.sequence(
+            Commands.waitSeconds(0.5),
+            Commands.run(() -> feeder.feed(), feeder)
+        )
+    );
+}
+--------------------------------------------------
+
+Old driver left bumper shooting version:
+--------------------------------------------------
+driverXbox.leftBumper().whileTrue(
+    Commands.run(() -> flywheel.setPower(.90), flywheel)
+        .alongWith(
+            Commands.sequence(
+                Commands.waitSeconds(1.5),
+                Commands.run(() -> feeder.feed(), feeder)
+            )
+        )
+);
+--------------------------------------------------
+
+Notes:
+- Fixed-power shot is simple and reliable.
+- Pose-distance shot is better for scaling.
+- Limelight-distance shot is useful if vision returns stable distances.
+
+----------------------------------------
+SECTION 3: OLD INTAKE SHAKE / FEED IDEAS
+----------------------------------------
+
+Reason removed:
+These were experimental feeding ideas for helping game pieces move through
+the mechanism while shooting.
+
+Old intake shake sequence:
+--------------------------------------------------
+Commands.repeatingSequence(
+    Commands.run(() -> intakePivot.setPower(0.7), intakePivot).withTimeout(0.12),
+    Commands.run(() -> intakePivot.setPower(-0.10), intakePivot).withTimeout(0.2)
+).withTimeout(4.0)
+--------------------------------------------------
+
+Notes:
+- This was meant to jiggle the mechanism while feeding.
+- Could still be useful if future robots need anti-jam behavior.
+- If brought back, rename it clearly like:
+  createAntiJamPulseCommand()
+
+----------------------------------------
+SECTION 4: OLD AUTONOMOUS IDEAS
+----------------------------------------
+
+Reason removed:
+Some autonomous code was unfinished or depended on the turret.
+
+Old AimAndShoot command concept:
+--------------------------------------------------
+private Command aimAndShootCommand() {
+  return Commands.sequence(
+      Commands.runOnce(() -> {
+        if (vision.hasRecentTarget()) {
+          double targetDeg = turret.getTurretDeg() + vision.getYawDegMostRecent();
+          turret.setTurretAngleDeg(targetDeg);
+        }
+      }, turret),
+
+      Commands.waitUntil(() ->
+          Math.abs(turret.getTargetTurretDeg() - turret.getTurretDeg()) < 2.0
+      ).withTimeout(2.0),
+
+      Commands.parallel(
+          Commands.run(() -> {
+            double d = vision.getDistanceMetersMostRecent();
+            double power = (d > 0) ? flywheel.getPowerForDistance(d) : 0.6;
+            flywheel.setPower(power);
+            feeder.feed();
+          }, flywheel, feeder).withTimeout(4.0),
+
+          Commands.repeatingSequence(
+              Commands.run(() -> intakePivot.setPower(0.7), intakePivot).withTimeout(0.12),
+              Commands.run(() -> intakePivot.setPower(-0.10), intakePivot).withTimeout(0.2)
+          ).withTimeout(4.0)
+      ),
+
+      Commands.runOnce(() -> {
+        flywheel.stop();
+        feeder.stop();
+        intakePivot.stop();
+      }, flywheel, feeder, intakePivot)
+  );
+}
+--------------------------------------------------
+
+Notes:
+- This was a full auto-aim + shoot flow.
+- It is no longer part of the active robot because turret logic was removed.
+- Good reference later if another aiming subsystem is added.
+
+Old pose-based aim and shoot concept:
+--------------------------------------------------
+private Command aimAndShootPoseCommand() {
+  return Commands.sequence(
+      Commands.runOnce(() -> {
+        Translation2d hub = getHubTarget();
+        turret.aimAtFieldPoint(hub.getX(), hub.getY(), drivebase.getPose());
+      }, turret),
+
+      Commands.waitUntil(() -> turret.atTarget()).withTimeout(1.8),
+
+      Commands.parallel(
+          Commands.run(() -> {
+            double distance = drivebase.getPose().getTranslation().getDistance(getHubTarget());
+            flywheel.setPower(flywheel.getPowerForPoseDistance(distance));
+            feeder.feed();
+          }, flywheel, feeder).withTimeout(6.0)
+      ),
+
+      Commands.runOnce(() -> {
+        flywheel.stop();
+        feeder.stop();
+        intakePivot.stop();
+      }, flywheel, feeder, intakePivot)
+  );
+}
+--------------------------------------------------
+
+----------------------------------------
+SECTION 5: OLD VISION ODOMETRY IDEAS
+----------------------------------------
+
+Reason removed:
+Vision pose updates were disabled while simplifying active code.
+
+Old updateVisionPose method:
+--------------------------------------------------
+private void updateVisionPose() {
+  vision.setRobotOrientation(drivebase.getHeading().getDegrees());
+  var measurementOpt = vision.getLatestVisionMeasurement();
+  if (measurementOpt.isEmpty()) {
+    return;
+  }
+
+  var measurement = measurementOpt.get();
+
+  double poseJump =
+      drivebase.getPose().getTranslation().getDistance(measurement.pose.getTranslation());
+
+  if (poseJump > Constants.VisionConstants.MAX_POSE_JUMP_METERS) {
+    SmartDashboard.putString("Vision/RejectReason", "Pose jump too large");
+    return;
+  }
+
+  if (Math.abs(drivebase.getGyroRateDegPerSec()) > Constants.VisionConstants.MAX_ROTATION_RATE_DEG_PER_SEC) {
+    SmartDashboard.putString("Vision/RejectReason", "Turning too fast");
+    return;
+  }
+
+  SmartDashboard.putString("Vision/RejectReason", "ACCEPTED");
+
+  if (measurement.tagCount >= 2) {
+    drivebase.addVisionMeasurement(
+        measurement.pose,
+        measurement.timestampSec,
+        drivebase.getMultiTagStdDevs());
+  } else {
+    drivebase.addVisionMeasurement(
+        measurement.pose,
+        measurement.timestampSec,
+        drivebase.getSingleTagStdDevs());
+  }
+}
+--------------------------------------------------
+
+Old scheduler hook for vision updates:
+--------------------------------------------------
+CommandScheduler.getInstance().schedule(
+    Commands.run(this::updateVisionPose, drivebase).ignoringDisable(false)
+);
+--------------------------------------------------
+
+Notes:
+- This is worth keeping for future vision fusion work.
+- Especially useful if pose estimation is brought back later.
+
+----------------------------------------
+SECTION 6: OLD CLIMBER COMMANDS
+----------------------------------------
+
+Reason removed:
+Climber commands were commented out during simplification.
+
+Old timed climber commands:
+--------------------------------------------------
+private Command hangUpTimedCommand(double seconds) {
+  return Commands.sequence(
+      Commands.run(() -> climb.runUp(), climb).withTimeout(2),
+      Commands.runOnce(() -> climb.stop(), climb)
+  );
+}
+
+private Command hangDownTimedCommand(double seconds) {
+  return Commands.sequence(
+      Commands.run(() -> climb.runDown(), climb).withTimeout(2),
+      Commands.runOnce(() -> climb.stop(), climb)
+  );
+}
+--------------------------------------------------
+
+Old climber bindings:
+--------------------------------------------------
+driverXbox.povUp().whileTrue(
+    Commands.run(() -> climb.runUp(), climb)
+);
+driverXbox.povUp().onFalse(
+    Commands.runOnce(() -> climb.stop(), climb)
+);
+
+driverXbox.povDown().whileTrue(
+    Commands.run(() -> climb.runDown(), climb)
+);
+driverXbox.povDown().onFalse(
+    Commands.runOnce(() -> climb.stop(), climb)
+);
+--------------------------------------------------
+
+Notes:
+- Useful if the climber is re-enabled later.
+- Consider moving all climber commands into RobotCommands if brought back.
+
+----------------------------------------
+SECTION 7: OLD RESET POSE IDEAS
+----------------------------------------
+
+Old start reset pose:
+--------------------------------------------------
+private Pose2d getStartResetPose() {
+    var alliance = DriverStation.getAlliance();
+
+    if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red) {
+        return new Pose2d(16, 7.6, Rotation2d.fromDegrees(0.0));
+    }
+
+    return new Pose2d(.35, 0.45, Rotation2d.fromDegrees(0.0));
+}
+--------------------------------------------------
+
+Old back reset pose:
+--------------------------------------------------
+private Pose2d getBackResetPose() {
+    var alliance = DriverStation.getAlliance();
+
+    if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red) {
+        return new Pose2d(16, .45, Rotation2d.fromDegrees(0.0));
+    }
+
+    return new Pose2d(0.35, 7.6, Rotation2d.fromDegrees(0.0));
+}
+--------------------------------------------------
+
+Old bindings:
+--------------------------------------------------
+driverXbox.start().onTrue(
+    Commands.runOnce(() -> drivebase.resetOdometry(getStartResetPose()), drivebase)
+);
+
+driverXbox.back().onTrue(
+    Commands.runOnce(() -> drivebase.resetOdometry(getBackResetPose()), drivebase)
+);
+--------------------------------------------------
+
+Notes:
+- Keep these if you may want multiple manual field reset positions again.
+
+----------------------------------------
+SECTION 8: FUTURE IDEAS / THINGS TO REVISIT
+----------------------------------------
+
+[ ] If vision odometry comes back, restore updateVisionPose cleanly and more testing
+
+[ ] If variable-distance shooting comes back, restore a safe version of
+    shootFromDistanceCommand with a real DoubleSupplier
+
+[ ] If climber comes back, move its commands into RobotCommands
+
+[ ] If anti-jam pulsing comes back, make it a named reusable command
+
+----------------------------------------
+SECTION 9: LESSONS LEARNED
+----------------------------------------
+
+1. Do not leave giant blocks of commented-out code inside active files.
+2. Do not register commands with null suppliers.
+3. Keep active robot code presentation-clean.
+4. Archive old experiments instead of deleting useful ideas.
+5. Separate wiring code from behavior code whenever possible.
+
+========================================
+END OF FILE
+========================================
+
+
+
+ public boolean isForwardLimitPressed() {
+    boolean raw = forwardLimitSwitch.get();
+    return IntakeConstants.SLIDER_FORWARD_LIMIT_INVERTED ? !raw : raw;
+  }
+
+  public boolean isReverseLimitPressed() {
+    boolean raw = reverseLimitSwitch.get();
+    return IntakeConstants.SLIDER_REVERSE_LIMIT_INVERTED ? !raw : raw;
+  }
+
+  public boolean isForwardLimitLatched() {
+    return forwardLimitLatched;
+  }
+
+  public boolean isReverseLimitLatched() {
+    return reverseLimitLatched;
+  }
+
+  private void updateLatchResetFromCommand(double appliedPower) {
+    if (appliedPower > 0.0) {
+      commandedDirection = 1;
+      reverseLimitLatched = false;
+    } else if (appliedPower < 0.0) {
+      commandedDirection = -1;
+      forwardLimitLatched = false;
+    } else {
+      commandedDirection = 0;
+    }
+  }
+
+  private void setProtectedPower(double power) {
+    double applied = MathUtil.clamp(power, -1.0, 1.0);
+
+    // Hard stop using real limit switches
+    if (isForwardLimitPressed() && applied > 0.0) {
+      applied = 0.0;
+    }
+
+    if (isReverseLimitPressed() && applied < 0.0) {
+      applied = 0.0;
+    }
+
+    // Backup current-latch protection
+    if (forwardLimitLatched && applied > 0.0) {
+      applied = 0.0;
+    }
+
+    if (reverseLimitLatched && applied < 0.0) {
+      applied = 0.0;
+    }
+
+    updateLatchResetFromCommand(applied);
+    sliderMotor.set(applied);
+  }

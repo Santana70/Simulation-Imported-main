@@ -19,12 +19,12 @@ public class FeederSubsystem extends SubsystemBase {
   public FeederSubsystem() {
     SparkMaxConfig idxCfg = new SparkMaxConfig();
     idxCfg.inverted(FeederConstants.INDEXER_INVERTED);
-    idxCfg.idleMode(IdleMode.kBrake);
+    idxCfg.idleMode(IdleMode.kCoast);
     idxCfg.smartCurrentLimit(FeederConstants.CURRENT_LIMIT);
 
     SparkMaxConfig spinCfg = new SparkMaxConfig();
     spinCfg.inverted(FeederConstants.SPINDEXER_INVERTED);
-    spinCfg.idleMode(IdleMode.kBrake);
+    spinCfg.idleMode(IdleMode.kCoast);
     spinCfg.smartCurrentLimit(FeederConstants.CURRENT_LIMIT);
 
     indexer.configure(idxCfg, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -34,7 +34,7 @@ public class FeederSubsystem extends SubsystemBase {
   /** Run both motors forward (ball toward turret). */
   public void feed() {
     indexer.set(FeederConstants.FEED_POWER);
-    spindexer.set(FeederConstants.FEED_POWER);
+    spindexer.set(FeederConstants.FEED_POWER * .5);
   }
 
   /** Run both motors backward (unjam / eject). */
