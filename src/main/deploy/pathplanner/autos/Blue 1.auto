@@ -7,19 +7,25 @@
         {
           "type": "named",
           "data": {
-            "name": "Deploy Slider"
+            "name": "ShootFar"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "Deploy Intake"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 2.5
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopShooter"
           }
         },
         {
@@ -47,6 +53,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Intake Off"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "BL Shots"
@@ -55,7 +67,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "ShootFar"
           }
         }
       ]

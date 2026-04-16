@@ -122,15 +122,13 @@ public class RobotCommands {
    * This is better for PathPlanner event markers than a forever-running command.
    */
   public Command autoShotRPM(double rpm) {
-    return Commands.sequence(
-        Commands.runOnce(() -> flywheel.setTargetRPM(rpm), flywheel),
-        Commands.waitSeconds(1.5),
-        Commands.run(feeder::feed, feeder).withTimeout(1.0),
-        Commands.runOnce(() -> {
-          feeder.stop();
-          flywheel.stopFlywheel();
-        }, feeder, flywheel)
-    );
+   return Commands.run(() -> flywheel.setTargetRPM(rpm), flywheel)
+        .alongWith(
+            Commands.sequence(
+                Commands.waitSeconds(1.0),
+                Commands.run(feeder::feed, feeder)
+            )
+        );
   }
 
   /** Stops feeder and flywheel only. */

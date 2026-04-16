@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.75,
-        "y": 6.5
+        "x": 7.739514978601996,
+        "y": 7.651355206847361
       },
       "isLocked": false,
       "linkedName": "BL ball 1"
     },
     {
       "anchor": {
-        "x": 3.5244464285714283,
-        "y": 7.468642857142857
+        "x": 3.430941512125534,
+        "y": 7.5996005706134095
       },
       "prevControl": {
-        "x": 7.314410714285714,
-        "y": 7.695392857142856
+        "x": 7.221968616262481,
+        "y": 7.703109843081313
       },
       "nextControl": null,
       "isLocked": false,
@@ -35,14 +35,14 @@
   "globalConstraints": {
     "maxVelocity": 4.0,
     "maxAcceleration": 4.0,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 540.0,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 100.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -75.0
   },
   "reversed": false,
   "folder": "Blue 1",

@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.45,
-        "y": 6.046
+        "x": 0.5714978601997143,
+        "y": 6.059900142653353
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.45,
-        "y": 6.046
+        "x": 1.5714978601997143,
+        "y": 6.059900142653353
       },
       "isLocked": false,
       "linkedName": "Depot Line up 2"
@@ -35,14 +35,14 @@
   "globalConstraints": {
     "maxVelocity": 4.0,
     "maxAcceleration": 4.0,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 540.0,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 100.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 152.0
+    "rotation": -28.0
   },
   "reversed": false,
   "folder": "Depot",

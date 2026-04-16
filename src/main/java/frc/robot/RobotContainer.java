@@ -122,9 +122,9 @@ driverCamera.setConfigJson("""
   private void configureAutonomousChooser() {
     autoChooser.setDefaultOption("Blue 1", "Blue 1");
     autoChooser.addOption("Blue 2", "Blue 2");
-    autoChooser.addOption("MiddleDepot+HumanPlayer", "MiddleDepot+HumanPlayer");
+    autoChooser.addOption("MiddleDepot", "MiddleDepot");
     autoChooser.addOption("Left", "Left");
-    autoChooser.addOption("Right", "Right");
+    autoChooser.addOption("Itkan Destroyer", "Itkan Destroyer");
   }
 private void registerNamedCommands() {
   // =========================

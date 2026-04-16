@@ -13,7 +13,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "ShootFar"
           }
         },
         {
@@ -25,7 +25,13 @@
         {
           "type": "named",
           "data": {
-            "name": "Deploy Slider"
+            "name": "Deploy Intake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopShooter"
           }
         },
         {
@@ -55,7 +61,13 @@
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "ShootFar"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Feed Intake"
           }
         },
         {
@@ -67,7 +79,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Deploy Slider"
+            "name": "Deploy Intake"
           }
         },
         {
@@ -97,31 +109,19 @@
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.5
+            "name": "ShootFar"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Deploy Slider"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Depot Human"
+            "name": "Feed Intake"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "LeftBump",
   "choreoAuto": false
 }
