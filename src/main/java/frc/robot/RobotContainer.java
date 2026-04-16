@@ -4,6 +4,10 @@ import java.io.File;
 
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.cscore.VideoSink;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -85,8 +89,34 @@ public class RobotContainer {
         Commands.run(this::updateDriveMode).ignoringDisable(true));
 
     DriverStation.silenceJoystickConnectionWarning(true);
-  }
 
+    // =========================
+// DRIVER USB CAMERA SETUP
+// =========================
+
+// This creates a USB camera stream for the driver.
+// The camera must be plugged into the RoboRIO USB port.
+
+UsbCamera driverCamera = CameraServer.startAutomaticCapture(); 
+ //TODO mark out with "//" before line of code to turn off camera if you don't have one or want to save resources
+
+// Set camera resolution.
+// 1280x720 = 720p (good quality without too much lag)
+driverCamera.setResolution(1280, 720); //TODO same here
+
+// Set frame rate.
+// 30 FPS is smooth without overloading bandwidth.
+driverCamera.setFPS(30); //TODO same here
+
+// Rotate the image 180 degrees.
+// Useful if the camera is mounted upside down.
+VideoSink cameraServer = CameraServer.getServer();//TODO same here
+cameraServer.setSource(driverCamera);//TODO same here
+
+// Apply rotation setting
+driverCamera.setConfigJson("""
+{"rotation": 180}""");}
+//TODO same here
   // ==================== Autonomous Setup ====================
 
   private void configureAutonomousChooser() {
