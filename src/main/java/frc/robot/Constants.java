@@ -116,27 +116,45 @@ public static final class IntakeConstants {
     public static final int ROLLER_MOTOR_ID = 22;  // TODO set
     public static final boolean ROLLER_INVERTED = true;
     public static final int ROLLER_CURRENT_LIMIT = 55;
-    public static final double INTAKE_POWER = 0.80;
-    public static final double OUTTAKE_POWER = -0.5;
+    public static final double INTAKE_POWER = 0.90;
+    public static final double OUTTAKE_POWER = -0.75;
   }
 
   public static final class FeederConstants {
     public static final int INDEXER_MOTOR_ID = 13;   // TODO set
-    public static final int SPINDEXER_MOTOR_ID = 15; // TODO set
+    public static final int SPINDEXER_MOTOR_ID = 29; // TODO set
     public static final boolean INDEXER_INVERTED = false;
     public static final boolean SPINDEXER_INVERTED = false;
     public static final int CURRENT_LIMIT = 35;
-    public static final double FEED_POWER = 0.4;
+    public static final double FEED_POWER = 0.7;
     public static final double REVERSE_POWER = -0.20;
   }
 
-  public static final class FlywheelConstants {
-    public static final int FLYWHEEL_MOTOR_ID = 24; // TODO set
-    public static final boolean FLYWHEEL_INVERTED = false;
-    public static final int CURRENT_LIMIT = 50;
-    public static final double SHOOT_POWER = 0.97;   // open-loop percent
-    public static final double IDLE_POWER = 0.0;
-  }
+public static final class FlywheelConstants {
+  public static final int FLYWHEEL_MOTOR_ID = 24;
+  public static final boolean FLYWHEEL_INVERTED = false;
+
+  public static final double NORMAL_SHOT_RPM = 5600.0;
+  public static final double CLOSE_SHOT_RPM = 5200.0;
+  public static final double FAR_SHOT_RPM = 6000.0;
+    public static final double SHOOT_POWER = 0.90;
+    public static final double IDLE_POWER = 0.90;
+
+
+      public static final double SUPPLY_CURRENT_LIMIT = 70.0;
+  public static final double STATOR_CURRENT_LIMIT = 110.0;
+  
+  
+  public static final double RPM_TOLERANCE = 100.0;
+  public static final double kS = 0.3;
+  public static final double kV = 0.13;
+  public static final double kA = 0.64;
+  public static final double kP = 0.26;
+  public static final double kI = 0.0;
+  public static final double kD = 0.002;
+
+  public static final double MOTOR_TO_FLYWHEEL_RATIO = 18/11;
+}
 
   public static final class TurretAimConstants {
   public static final double kP = 1.0;       // start here

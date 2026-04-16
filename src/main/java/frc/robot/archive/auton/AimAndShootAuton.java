@@ -3,9 +3,9 @@ package frc.robot.archive.auton;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.feeder.FeederSubsystem;
+import frc.robot.archive.Flywheel;
 import frc.robot.archive.TurretSubsystem;
 import frc.robot.archive.vision.LimelightSubsystem;
-import frc.robot.subsystems.FlywheelSubsystem;
 import frc.robot.subsystems.Intake.IntakeSliderSubsystem;
 
 /**
@@ -17,7 +17,7 @@ public class AimAndShootAuton extends SequentialCommandGroup {
   public AimAndShootAuton(
       TurretSubsystem turret,
       LimelightSubsystem vision,
-      FlywheelSubsystem flywheel,
+      Flywheel flywheel,
       FeederSubsystem feeder,
       IntakeSliderSubsystem intakePivot) {
 

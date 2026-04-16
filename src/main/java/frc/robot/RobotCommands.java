@@ -5,10 +5,10 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.subsystems.FlywheelSubsystem;
 import frc.robot.subsystems.Intake.IntakeRollerSubsystem;
 import frc.robot.subsystems.Intake.IntakeSliderSubsystem;
 import frc.robot.subsystems.feeder.FeederSubsystem;
-import frc.robot.subsystems.FlywheelSubsystem;
 
 /**
  * Stores reusable robot actions so RobotContainer stays clean.
@@ -73,23 +73,33 @@ public Command deployIntakeCommand() {
    * 3. Wait for flywheel spin-up
    * 4. Start feeder
    */
-  public Command shootFromDistanceCommand(DoubleSupplier distanceSupplier) {
-    return Commands.run(() -> {
-          double distanceMeters = distanceSupplier.getAsDouble();
-          SmartDashboard.putNumber("Shot/DistanceMeters", distanceMeters);
+  // public Command shootFromDistanceCommand(DoubleSupplier distanceSupplier) {
+  //   return Commands.run(() -> {
+  //         double distanceMeters = distanceSupplier.getAsDouble();
+  //         SmartDashboard.putNumber("Shot/DistanceMeters", distanceMeters);
 
-          double flywheelPower = flywheel.getPowerForPoseDistance(distanceMeters);
-          SmartDashboard.putNumber("Shot/CommandedPower", flywheelPower);
+  //         double flywheelPower = flywheel.getPowerForPoseDistance(distanceMeters);
+  //         SmartDashboard.putNumber("Shot/CommandedPower", flywheelPower);
 
-          flywheel.setPower(flywheelPower);
-        }, flywheel)
-        .alongWith(
-            Commands.sequence(
-                Commands.waitSeconds(1.5),
-                Commands.run(feeder::feed, feeder)
-            )
-        );
-  }
+  //         flywheel.setPower(flywheelPower);
+  //       }, flywheel)
+  //       .alongWith(
+  //           Commands.sequence(
+  //               Commands.waitSeconds(1.5),
+  //               Commands.run(feeder::feed, feeder)
+  //           )
+  //       );
+  // }
+
+  public Command shootRPMCommand(double rpm) {
+  return Commands.run(() -> flywheel.setTargetRPM(rpm), flywheel)
+      .alongWith(
+          Commands.sequence(
+              Commands.waitSeconds(1.5),
+              Commands.run(feeder::feed, feeder)
+          )
+      );
+}
 
   /** Fixed-power shot for simple testing. */
   public Command fixedShotCommand(double flywheelPower) {

@@ -17,11 +17,11 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.FlywheelSubsystem;
 import frc.robot.subsystems.Intake.IntakeRollerSubsystem;
 import frc.robot.subsystems.Intake.IntakeSliderSubsystem;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
-import frc.robot.subsystems.FlywheelSubsystem;
 import swervelib.SwerveInputStream;
 
 /**
@@ -157,7 +157,7 @@ public class RobotContainer {
         SwerveInputStream.of(
                 drivebase.getSwerveDrive(),
                 () -> -driverXbox.getLeftY() * driveSpeedScale,
-                () -> -driverXbox.getLeftX())
+                () -> -driverXbox.getLeftX() * driveSpeedScale)
             .withControllerRotationAxis(() -> driverXbox.getRightX() * driveSpeedScale)
             .deadband(OperatorConstants.DEADBAND)
             .scaleTranslation(0.8)
@@ -245,7 +245,7 @@ public class RobotContainer {
 
   private void configureBindings() {
     // Precision drive mode
-    driverXbox.povLeft().onTrue(Commands.runOnce(() -> driveSpeedScale = 0.6)); //turns the speed to 30% when the left POV is pressed
+    driverXbox.povLeft().onTrue(Commands.runOnce(() -> driveSpeedScale = 0.75)); //turns the speed to 30% when the left POV is pressed
     driverXbox.povRight().onTrue(Commands.runOnce(() -> driveSpeedScale = 1.0)); //turns the speed to 100% when the right POV is pressed
 
     // Reset odometry to known center pose
@@ -275,7 +275,7 @@ public class RobotContainer {
     driverXbox.x().onTrue(
         Commands.runOnce(intakeSlider::retract, intakeSlider));
 
-    driverXbox.y().onTrue(
+    driverXbox.b().onTrue(
         Commands.runOnce(intakeSlider::extend, intakeSlider));
 
     // Optional preset for a middle/feed position
@@ -298,13 +298,29 @@ public class RobotContainer {
         Commands.runOnce(intakeRoller::stop, intakeRoller)); //stops the intake rollers when the left trigger is released
 
     // Shooter
-    driverXbox.leftBumper().onTrue(robotCommands.fixedShotCommand(0.90)); //shoots with a fixed power of 90% when the left bumper is held
+    // driverXbox.leftBumper().onTrue(robotCommands.shootRPMCommand(5400)); //shoots with a fixed power of 90% when the left bumper is held
     // driverXbox.leftBumper().onFalse(robotCommands.stopShooterCommand()); //stops the shooter when the left bumper is released
-    driverXbox.b().onTrue(robotCommands.fixedShotCommand(0.80)); //shoots with a fixed power of 90% when the left bumper is held
-    driverXbox.a().onTrue(robotCommands.fixedShotCommand(0.7)); //shoots with a fixed power of 90% when the left bumper is held
+    // driverXbox.b().onTrue(robotCommands.shootRPMCommand(4500)); //shoots with a fixed power of 90% when the left bumper is held
+    // driverXbox.a().onTrue(robotCommands.shootRPMCommand(4000)); //shoots with a fixed power of 90% when the left bumper is held
 
 
     // Panic stop
     driverXbox.start().onTrue(robotCommands.panicStopCommand()); //stops all mechanisms when the start button is pressed
+
+
+
+
+
+
+    operatorXbox.start().onTrue(robotCommands.panicStopCommand()); //stops all mechanisms when the start button is pressed
+
+    operatorXbox.a().onTrue(robotCommands.shootRPMCommand(4100)); //
+    operatorXbox.b().onTrue(robotCommands.shootRPMCommand(4400)); //layup about half to full robot length away
+    operatorXbox.x().onTrue(robotCommands.shootRPMCommand(4700)); //
+    operatorXbox.y().onTrue(robotCommands.shootRPMCommand(5800)); // theoretical pass
+    operatorXbox.rightBumper().onTrue(robotCommands.shootRPMCommand(5400)); // 3 Point about 12 feet
+
+
+
   }
 }
