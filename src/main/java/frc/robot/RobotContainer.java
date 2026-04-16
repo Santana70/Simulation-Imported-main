@@ -96,16 +96,52 @@ public class RobotContainer {
     autoChooser.addOption("Left", "Left");
     autoChooser.addOption("Right", "Right");
   }
+private void registerNamedCommands() {
+  // =========================
+  // INTAKE / SLIDER AUTO EVENTS
+  // =========================
 
-  private void registerNamedCommands() {
-    NamedCommands.registerCommand("Intake On", robotCommands.intakeOnCommand());
-    NamedCommands.registerCommand("Intake Off", robotCommands.intakeOffCommand());
-    NamedCommands.registerCommand("Deploy Intake", robotCommands.deployIntakeCommand());
-    NamedCommands.registerCommand("Stow Intake", robotCommands.stowIntakeCommand());
+  // Turn intake roller on
+  NamedCommands.registerCommand("Intake On", robotCommands.intakeOnCommand());
 
-    // Example fixed shot command for autonomous use
-    NamedCommands.registerCommand("Shoot", robotCommands.fixedShotCommand(0.90));
-  }
+  // Turn intake roller off
+  NamedCommands.registerCommand("Intake Off", robotCommands.intakeOffCommand());
+
+  // Move slider all the way out
+  NamedCommands.registerCommand("Deploy Intake", robotCommands.deployIntakeCommand());
+
+  // Move slider all the way in
+  NamedCommands.registerCommand("Stow Intake", robotCommands.stowIntakeCommand());
+
+  // Move slider to the middle feed position
+  NamedCommands.registerCommand("Feed Intake", robotCommands.feedIntakePositionCommand());
+
+
+  // =========================
+  // SHOOTER AUTO EVENTS
+  // =========================
+
+  // Close auto shot RPM
+  NamedCommands.registerCommand(
+      "ShootClose",
+      robotCommands.autoShotRPM(Constants.FlywheelConstants.AUTO_CLOSE_RPM)
+  );
+
+  // Middle auto shot RPM
+  NamedCommands.registerCommand(
+      "ShootMid",
+      robotCommands.autoShotRPM(Constants.FlywheelConstants.AUTO_MID_RPM)
+  );
+
+  // Far auto shot RPM
+  NamedCommands.registerCommand(
+      "ShootFar",
+      robotCommands.autoShotRPM(Constants.FlywheelConstants.AUTO_FAR_RPM)
+  );
+
+  // Optional stop command if you want a marker that just stops shooter
+  NamedCommands.registerCommand("StopShooter", robotCommands.stopShooterCommand());
+}
 
   public Command getAutonomousCommand() {
     String selectedAuto = autoChooser.getSelected();
@@ -235,17 +271,17 @@ public class RobotContainer {
     var alliance = DriverStation.getAlliance();
 
     if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red) {
-      return new Pose2d(12.9, 4.0, Rotation2d.fromDegrees(0.0));
+      return new Pose2d(12.9, 4.0, Rotation2d.fromDegrees(0.180));
     }
 
-    return new Pose2d(3.4, 4.0, Rotation2d.fromDegrees(180.0));
+    return new Pose2d(3.4, 4.0, Rotation2d.fromDegrees(0.0));
   }
 
   // ==================== Controller Bindings ====================
 
   private void configureBindings() {
     // Precision drive mode
-    driverXbox.povLeft().onTrue(Commands.runOnce(() -> driveSpeedScale = 0.75)); //turns the speed to 30% when the left POV is pressed
+    driverXbox.povLeft().onTrue(Commands.runOnce(() -> driveSpeedScale = 0.75)); //turns the speed to 75% when the left POV is pressed
     driverXbox.povRight().onTrue(Commands.runOnce(() -> driveSpeedScale = 1.0)); //turns the speed to 100% when the right POV is pressed
 
     // Reset odometry to known center pose
@@ -273,14 +309,14 @@ public class RobotContainer {
 
     // Intake slider preset positions
     driverXbox.x().onTrue(
-        Commands.runOnce(intakeSlider::retract, intakeSlider));
+        Commands.runOnce(intakeSlider::feedPosition, intakeSlider));
 
     driverXbox.b().onTrue(
         Commands.runOnce(intakeSlider::extend, intakeSlider));
 
     // Optional preset for a middle/feed position
-    driverXbox.rightBumper().onTrue(
-        Commands.runOnce(intakeSlider::feedPosition, intakeSlider));
+    driverXbox.a().onTrue(
+        Commands.runOnce(intakeSlider::retract, intakeSlider));
 
         // Zero the intake slider at its current physical position
     driverXbox.back().onTrue(
@@ -311,16 +347,39 @@ public class RobotContainer {
 
 
 
+// =========================
+// OPERATOR SHOOTER PRESETS
+// =========================
 
-    operatorXbox.start().onTrue(robotCommands.panicStopCommand()); //stops all mechanisms when the start button is pressed
+// Emergency stop for operator too
+operatorXbox.start().onTrue(robotCommands.stopShooterCommand());
 
-    operatorXbox.a().onTrue(robotCommands.shootRPMCommand(4100)); //
-    operatorXbox.b().onTrue(robotCommands.shootRPMCommand(4400)); //layup about half to full robot length away
-    operatorXbox.x().onTrue(robotCommands.shootRPMCommand(4700)); //
-    operatorXbox.y().onTrue(robotCommands.shootRPMCommand(5800)); // theoretical pass
-    operatorXbox.rightBumper().onTrue(robotCommands.shootRPMCommand(5400)); // 3 Point about 12 feet
+/*
+ * These are one-tap RPM presets.
+ * Pressing the button starts the flywheel RPM command.
+ *
+ * IMPORTANT:
+ * Because these use onTrue(...), they start once and keep running until
+ * another command interrupts them or a stop command is pressed.
+ *
+ * If you want "hold button to shoot, release to stop", use whileTrue(...)
+ * and onFalse(robotCommands.stopShooterCommand()) instead.
+ */
+//TODO test all of these
+// Very low shot / close layup
+operatorXbox.a().onTrue(robotCommands.shootRPMCommand(4100));
 
+// Short shot / layup from a little farther away
+operatorXbox.b().onTrue(robotCommands.shootRPMCommand(4400));
 
+// Medium shot
+operatorXbox.y().onTrue(robotCommands.shootRPMCommand(4700));
+
+// Main competition shot
+operatorXbox.rightBumper().onTrue(robotCommands.shootRPMCommand(5400));
+
+// Very high / pass-style shot
+operatorXbox.leftBumper().onTrue(robotCommands.shootRPMCommand(5800));
 
   }
 }

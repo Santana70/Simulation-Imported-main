@@ -22,7 +22,7 @@ public final class Constants
   public static final double ROBOT_MASS = (148 - 20.3) * 0.453592; // 32lbs * kg per pound
   public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
   public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
-  public static final double MAX_SPEED  = Units.feetToMeters(12);
+  public static final double MAX_SPEED  = Units.feetToMeters(14);
   // Maximum speed of the robot in meters per second, used to limit acceleration.
 
 //  public static final class AutonConstants
@@ -108,12 +108,12 @@ public static final class IntakeConstants {
   public static final double SLIDER_POSITION_TOLERANCE = .10;
 
   // Current-based hard-stop detection
-  public static final double SLIDER_HARD_STOP_CURRENT_AMPS = 28.0;
+  public static final double SLIDER_HARD_STOP_CURRENT_AMPS = 34.0;
   public static final double SLIDER_HARD_STOP_DEBOUNCE_SEC = 0.2;
 }
 
   public static final class RollerConstants {
-    public static final int ROLLER_MOTOR_ID = 22;  // TODO set
+    public static final int ROLLER_MOTOR_ID = 22;  // 
     public static final boolean ROLLER_INVERTED = true;
     public static final int ROLLER_CURRENT_LIMIT = 55;
     public static final double INTAKE_POWER = 0.90;
@@ -121,39 +121,115 @@ public static final class IntakeConstants {
   }
 
   public static final class FeederConstants {
-    public static final int INDEXER_MOTOR_ID = 13;   // TODO set
-    public static final int SPINDEXER_MOTOR_ID = 29; // TODO set
+    public static final int INDEXER_MOTOR_ID = 13;   //
+    public static final int SPINDEXER_MOTOR_ID = 29; //
     public static final boolean INDEXER_INVERTED = false;
     public static final boolean SPINDEXER_INVERTED = false;
-    public static final int CURRENT_LIMIT = 35;
-    public static final double FEED_POWER = 0.7;
-    public static final double REVERSE_POWER = -0.20;
+    public static final int CURRENT_LIMIT = 40;
+    public static final double FEED_POWER = 0.35;
+    public static final double REVERSE_POWER = -0.40;
   }
 
 public static final class FlywheelConstants {
+
+  // =========================
+  // MOTOR / HARDWARE
+  // =========================
+
+  // CAN ID of the flywheel motor controller.
+  // Change this if the Kraken uses a different CAN ID in Phoenix Tuner.
   public static final int FLYWHEEL_MOTOR_ID = 24;
+
+  // Set this to true if the flywheel spins the wrong direction.
+  // If positive RPM makes the wheel run backward, flip this.
   public static final boolean FLYWHEEL_INVERTED = false;
 
+  // Gear ratio from MOTOR to FLYWHEEL.
+  // Example here: 11 tooth driving 18 tooth = motor spins 18/11 times per 1 flywheel rotation.
+  // IMPORTANT: use decimals so Java does NOT do integer division.
+  public static final double MOTOR_TO_FLYWHEEL_RATIO = 18.0 / 11.0;
+
+
+  // =========================
+  // RPM PRESETS
+  // =========================
+
+  // Main everyday teleop shot.
   public static final double NORMAL_SHOT_RPM = 5600.0;
+
+  // Lower RPM preset for closer shots.
   public static final double CLOSE_SHOT_RPM = 5200.0;
+
+  // Higher RPM preset for farther shots.
   public static final double FAR_SHOT_RPM = 6000.0;
-    public static final double SHOOT_POWER = 0.90;
-    public static final double IDLE_POWER = 0.90;
 
 
-      public static final double SUPPLY_CURRENT_LIMIT = 70.0;
-  public static final double STATOR_CURRENT_LIMIT = 110.0;
-  
-  
+  // =========================
+  // AUTO RPM PRESETS
+  // =========================
+
+  // These are used by PathPlanner NamedCommands in autonomous. 
+  // Change these if auto shots are too short or too long.
+// TODO these are your rpm for autonamous
+  public static final double AUTO_CLOSE_RPM = 4500.0;
+  public static final double AUTO_MID_RPM = 5000.0;
+  public static final double AUTO_FAR_RPM = 5800.0;
+
+
+  // =========================
+  // OLD PERCENT-OUTPUT BACKUP
+  // =========================
+
+  // Backup open-loop shooter power for testing only.
+  // RPM mode is preferred for consistency.
+  public static final double SHOOT_POWER = 0.90;
+
+  // Idle power when not shooting.
+  // Usually 0 unless you intentionally want the wheel spinning slowly.
+  public static final double IDLE_POWER = 0.0;
+
+
+  // =========================
+  // CURRENT LIMITS
+  // =========================
+
+  // Battery-side current limit.
+  // Raise if the shooter feels weak.
+  // Lower if battery voltage drops too much.
+  public static final double SUPPLY_CURRENT_LIMIT = 75.0;
+
+  // Motor-side torque current limit.
+  // This affects how hard the flywheel can recover after a shot.
+  public static final double STATOR_CURRENT_LIMIT = 130.0;
+
+
+  // =========================
+  // CLOSED-LOOP TUNING
+  // =========================
+
+  // How close to the target RPM counts as "at speed".
   public static final double RPM_TOLERANCE = 100.0;
-  public static final double kS = 0.3;
-  public static final double kV = 0.13;
-  public static final double kA = 0.64;
-  public static final double kP = 0.26;
-  public static final double kI = 0.0;
-  public static final double kD = 0.002;
 
-  public static final double MOTOR_TO_FLYWHEEL_RATIO = 18/11;
+  // Feedforward terms.
+  // kS helps overcome static friction.
+  public static final double kS = 0.30;
+
+  // kV holds steady-state RPM.
+  public static final double kV = 0.12;
+
+  // kA helps recovery during rapid fire.
+  // WARNING: 0.64 is unusually high. Keep it only if it truly works on your robot.
+  public static final double kA = 0.64;
+
+  // PID terms.
+  // kP helps fix RPM error.
+  public static final double kP = 0.26;
+
+  // Usually 0 for shooters unless you know you need it.
+  public static final double kI = 0.0;
+
+  // Small damping term to reduce oscillation.
+  public static final double kD = 0.002;
 }
 
   public static final class TurretAimConstants {

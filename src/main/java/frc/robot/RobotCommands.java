@@ -1,8 +1,5 @@
 package frc.robot;
 
-import java.util.function.DoubleSupplier;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.FlywheelSubsystem;
@@ -11,17 +8,14 @@ import frc.robot.subsystems.Intake.IntakeSliderSubsystem;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 
 /**
- * Stores reusable robot actions so RobotContainer stays clean.
+ * Stores reusable mechanism commands so RobotContainer stays cleaner.
  *
- * RobotContainer should focus on:
- * - creating subsystems
- * - controller bindings
- * - autonomous chooser
+ * Put grouped actions here:
+ * - intake actions
+ * - shooter actions
+ * - autonomous helper actions
  *
- * This class focuses on:
- * - small reusable commands
- * - grouped mechanism actions
- * - commands used in both teleop and autonomous
+ * Put button bindings in RobotContainer.
  */
 public class RobotCommands {
 
@@ -41,67 +35,71 @@ public class RobotCommands {
     this.flywheel = flywheel;
   }
 
-  /** Turns intake rollers on. */
+  /** Turns intake roller on to pull game pieces in. */
   public Command intakeOnCommand() {
     return Commands.runOnce(intakeRoller::intake, intakeRoller);
   }
 
-  /** Turns intake rollers off. */
+  /** Stops the intake roller. */
   public Command intakeOffCommand() {
     return Commands.runOnce(intakeRoller::stop, intakeRoller);
   }
 
-/** Retracts the intake slider, waits briefly, then stops motor output. */
-public Command stowIntakeCommand() {
-  return Commands.sequence(
-      Commands.run(intakeSlider::retract, intakeSlider).withTimeout(0.6),
-      Commands.runOnce(intakeSlider::stop, intakeSlider));
-}
-
-/** Extends the intake slider, waits briefly, then stops motor output. */
-public Command deployIntakeCommand() {
-  return Commands.sequence(
-      Commands.run(intakeSlider::extend, intakeSlider).withTimeout(0.6),
-      Commands.runOnce(intakeSlider::stop, intakeSlider));
-}
   /**
-   * Shoots using a supplied distance in meters.
-   *
-   * Flow:
-   * 1. Compute flywheel power from distance
-   * 2. Spin flywheel immediately
-   * 3. Wait for flywheel spin-up
-   * 4. Start feeder
+   * Moves the intake slider to the fully retracted preset.
+   * Waits until it arrives or times out.
    */
-  // public Command shootFromDistanceCommand(DoubleSupplier distanceSupplier) {
-  //   return Commands.run(() -> {
-  //         double distanceMeters = distanceSupplier.getAsDouble();
-  //         SmartDashboard.putNumber("Shot/DistanceMeters", distanceMeters);
+  public Command stowIntakeCommand() {
+    return Commands.sequence(
+        Commands.runOnce(intakeSlider::retract, intakeSlider),
+        Commands.waitUntil(intakeSlider::atGoal).withTimeout(1.0)
+    );
+  }
 
-  //         double flywheelPower = flywheel.getPowerForPoseDistance(distanceMeters);
-  //         SmartDashboard.putNumber("Shot/CommandedPower", flywheelPower);
+  /**
+   * Moves the intake slider to the fully extended preset.
+   * Waits until it arrives or times out.
+   */
+  public Command deployIntakeCommand() {
+    return Commands.sequence(
+        Commands.runOnce(intakeSlider::extend, intakeSlider),
+        Commands.waitUntil(intakeSlider::atGoal).withTimeout(1.0)
+    );
+  }
 
-  //         flywheel.setPower(flywheelPower);
-  //       }, flywheel)
-  //       .alongWith(
-  //           Commands.sequence(
-  //               Commands.waitSeconds(1.5),
-  //               Commands.run(feeder::feed, feeder)
-  //           )
-  //       );
-  // }
+  /**
+   * Moves the intake slider to the feed position preset.
+   * This is useful in auto before feeding/shooting.
+   */
+  public Command feedIntakePositionCommand() {
+    return Commands.sequence(
+        Commands.runOnce(intakeSlider::feedPosition, intakeSlider),
+        Commands.waitUntil(intakeSlider::atGoal).withTimeout(1.0)
+    );
+  }
 
+  /**
+   * Teleop/held RPM shooting command.
+   * While this command is running:
+   * - flywheel is held at target RPM
+   * - feeder starts after a short spin-up delay
+   *
+   * Best for buttons that are held, not one-tap auto markers.
+   */
   public Command shootRPMCommand(double rpm) {
-  return Commands.run(() -> flywheel.setTargetRPM(rpm), flywheel)
-      .alongWith(
-          Commands.sequence(
-              Commands.waitSeconds(1.5),
-              Commands.run(feeder::feed, feeder)
-          )
-      );
-}
+    return Commands.run(() -> flywheel.setTargetRPM(rpm), flywheel)
+        .alongWith(
+            Commands.sequence(
+                Commands.waitSeconds(1.5),
+                Commands.run(feeder::feed, feeder)
+            )
+        );
+  }
 
-  /** Fixed-power shot for simple testing. */
+  /**
+   * Simple fixed power backup shot.
+   * Use only if RPM control is not working yet.
+   */
   public Command fixedShotCommand(double flywheelPower) {
     return Commands.run(() -> flywheel.setPower(flywheelPower), flywheel)
         .alongWith(
@@ -112,7 +110,30 @@ public Command deployIntakeCommand() {
         );
   }
 
-  /** Stops shooter-related mechanisms. */
+  /**
+   * Autonomous RPM shot.
+   *
+   * Flow:
+   * 1. Spin flywheel to target RPM
+   * 2. Wait for spin-up
+   * 3. Feed for a fixed time
+   * 4. Stop feeder and flywheel
+   *
+   * This is better for PathPlanner event markers than a forever-running command.
+   */
+  public Command autoShotRPM(double rpm) {
+    return Commands.sequence(
+        Commands.runOnce(() -> flywheel.setTargetRPM(rpm), flywheel),
+        Commands.waitSeconds(1.5),
+        Commands.run(feeder::feed, feeder).withTimeout(1.0),
+        Commands.runOnce(() -> {
+          feeder.stop();
+          flywheel.stopFlywheel();
+        }, feeder, flywheel)
+    );
+  }
+
+  /** Stops feeder and flywheel only. */
   public Command stopShooterCommand() {
     return Commands.runOnce(() -> {
       feeder.stop();
@@ -120,15 +141,13 @@ public Command deployIntakeCommand() {
     }, feeder, flywheel);
   }
 
-  /** Stops all intake/shooter mechanisms. */
+  /** Emergency stop for all major mechanisms. */
   public Command panicStopCommand() {
     return Commands.runOnce(() -> {
       intakeSlider.stop();
       intakeRoller.stop();
       feeder.stop();
       flywheel.stop();
-    }, 
-    intakeSlider, 
-    intakeRoller, feeder, flywheel);
+    }, intakeSlider, intakeRoller, feeder, flywheel);
   }
 }
