@@ -1,0 +1,55 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "INTAKE RIGHT"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "POST"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RIGHT SHOT 1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootClose"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2ND SWEEP"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2nd Sweep"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Bump sweep 2"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "RIGHT SWEEPER",
+  "choreoAuto": false
+}

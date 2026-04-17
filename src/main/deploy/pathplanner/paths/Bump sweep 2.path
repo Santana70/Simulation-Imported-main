@@ -1,0 +1,67 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 5.865903614457832,
+        "y": 0.45
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.909614457831326,
+        "y": 1.2156506024096394
+      },
+      "isLocked": false,
+      "linkedName": "2nd choose"
+    },
+    {
+      "anchor": {
+        "x": 5.680132530120481,
+        "y": 2.6362530120481926
+      },
+      "prevControl": {
+        "x": 5.800337349397589,
+        "y": 2.0570843373493974
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Deploy Intake",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "Intake On",
+      "waypointRelativePos": 0.07342342342342272,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 400.0,
+    "maxAngularAcceleration": 600.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 88.78112476486884
+  },
+  "reversed": false,
+  "folder": "RIGHT SWEEPER",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 90.0
+  },
+  "useDefaultConstraints": true
+}
