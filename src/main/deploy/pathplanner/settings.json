@@ -2,18 +2,15 @@
   "robotWidth": 0.8382,
   "robotLength": 0.6604,
   "holonomicMode": true,
-  "pathFolders": [
-    "Blue 1",
-    "Blue 2",
-    "Depot",
-    "New Folder",
-<<<<<<< Updated upstream
-    "RIGHT SWEEPER",
-=======
-    "Center",
->>>>>>> Stashed changes
-    "evil auto "
-  ],
+"pathFolders": [
+  "Blue 1",
+  "Blue 2",
+  "Depot",
+  "New Folder",
+  "RIGHT SWEEPER",
+  "Center",
+  "evil auto "
+],
   "autoFolders": [
     "LeftBump",
     "LeftTrench",

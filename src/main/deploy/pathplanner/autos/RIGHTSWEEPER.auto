@@ -27,29 +27,11 @@
           "data": {
             "name": "ShootClose"
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "2ND SWEEP"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "2nd Sweep"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Bump sweep 2"
-          }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "RIGHT SWEEPER",
+  "folder": null,
   "choreoAuto": false
 }

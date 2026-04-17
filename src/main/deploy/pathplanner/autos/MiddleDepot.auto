@@ -13,13 +13,7 @@
         {
           "type": "named",
           "data": {
-            "name": "ShootFar"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.5
+            "name": "ShootFarFeedSeq"
           }
         },
         {
@@ -53,42 +47,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Intake Off"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ShootFar"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Feed Intake"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.5
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Deploy Intake"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake On"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "Depot line up 2"
@@ -109,13 +67,7 @@
         {
           "type": "named",
           "data": {
-            "name": "ShootFar"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Feed Intake"
+            "name": "ShootFarFeedSeq"
           }
         }
       ]

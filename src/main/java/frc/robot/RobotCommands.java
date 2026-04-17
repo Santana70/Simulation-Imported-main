@@ -1,5 +1,9 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.RPM;
+
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.FlywheelSubsystem;
@@ -77,7 +81,7 @@ public class RobotCommands {
         Commands.waitUntil(intakeSlider::atGoal).withTimeout(1.0)
     );
   }
-
+  Debouncer debounce = new Debouncer(0.2, DebounceType.kFalling);
   /**
    * Teleop/held RPM shooting command.
    * While this command is running:
@@ -87,10 +91,26 @@ public class RobotCommands {
    * Best for buttons that are held, not one-tap auto markers.
    */
   public Command shootRPMCommand(double rpm) {
+        // return Commands.run(() -> flywheel.setTargetRPM(rpm), flywheel)
+        // .alongWith(
+        //     Commands.sequence(
+        //         Commands.waitSeconds(.65),
+        //         Commands.run(feeder::feed, feeder)
+        //     )
+        // );
     return Commands.run(() -> flywheel.setTargetRPM(rpm), flywheel)
         .alongWith(
             Commands.sequence(
-                Commands.waitSeconds(1.5),
+                Commands.waitUntil(()->debounce.calculate(RPM.of(flywheel.getCurrentRPM()).isNear(RPM.of(rpm), RPM.of(250)))).withTimeout(0.2),
+                Commands.run(feeder::feed, feeder).until(()->!RPM.of(flywheel.getCurrentRPM()).isNear(RPM.of(rpm), RPM.of(250)))
+            ).repeatedly()
+        );
+  }
+   public Command PassRPM(double rpm) {
+    return Commands.run(() -> flywheel.setTargetRPM(rpm), flywheel)
+        .alongWith(
+            Commands.sequence(
+                Commands.waitSeconds(.25),
                 Commands.run(feeder::feed, feeder)
             )
         );
@@ -124,7 +144,7 @@ public class RobotCommands {
 public Command autoShotRPM(double rpm) {
   return Commands.sequence(
       Commands.runOnce(() -> flywheel.setTargetRPM(rpm), flywheel),
-      Commands.waitSeconds(1.5),
+      Commands.waitSeconds(1.0),
       Commands.run(feeder::feed, feeder).withTimeout(5.0),
       Commands.runOnce(() -> {
         feeder.stop();
@@ -150,4 +170,36 @@ public Command autoShotRPM(double rpm) {
       flywheel.stop();
     }, intakeSlider, intakeRoller, feeder, flywheel);
   }
+
+  public Command autoShotWithIntakeSequence(double rpm) {
+  return Commands.sequence(
+      // Start shooter first
+      Commands.runOnce(() -> flywheel.setTargetRPM(rpm), flywheel),
+
+      // Let flywheel get up to speed
+      Commands.waitSeconds(0.5),
+
+      // Move intake to feed position
+      Commands.runOnce(intakeSlider::feedPosition, intakeSlider),
+      Commands.waitUntil(intakeSlider::atGoal).withTimeout(0.5),
+
+      // Feed note
+      Commands.run(feeder::feed, feeder).withTimeout(0.5),
+
+      // Move intake out and back before stopping shooter
+      Commands.runOnce(intakeSlider::extend, intakeSlider),
+      Commands.waitUntil(intakeSlider::atGoal).withTimeout(0.5),
+      Commands.runOnce(intakeRoller::intake, intakeRoller).withTimeout(0.5),
+
+      Commands.runOnce(intakeSlider::retract, intakeSlider),
+      Commands.waitUntil(intakeSlider::atGoal).withTimeout(0.5),
+      Commands.waitSeconds(4),
+      // Stop feeder and shooter last
+      Commands.runOnce(() -> {
+        feeder.stop();
+        flywheel.stopFlywheel();
+        intakeRoller.stop();
+      }, feeder, flywheel, intakeRoller)
+  );
+}
 }

@@ -67,6 +67,12 @@
       "waypointRelativePos": 0.15045045045044983,
       "endWaypointRelativePos": null,
       "command": null
+    },
+    {
+      "name": "Feed Intake",
+      "waypointRelativePos": 1.5264797507788161,
+      "endWaypointRelativePos": null,
+      "command": null
     }
   ],
   "globalConstraints": {
@@ -82,7 +88,7 @@
     "rotation": 90.0
   },
   "reversed": false,
-  "folder": "RIGHT SWEEPER",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": 90.0

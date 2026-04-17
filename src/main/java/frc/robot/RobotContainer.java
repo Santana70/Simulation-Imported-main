@@ -126,7 +126,11 @@ public class RobotContainer {
     autoChooser.addOption("MiddleDepot", "MiddleDepot");
     autoChooser.addOption("Left", "Left");
     autoChooser.addOption("Itkan Destroyer", "Itkan Destroyer");
+    autoChooser.addOption("New Auto", "New Auto");
+
     autoChooser.addOption("Center", "Center");
+    autoChooser.addOption("RIGHTSWEEPER", "RIGHTSWEEPER");
+
 
   }
 private void registerNamedCommands() {
@@ -153,6 +157,12 @@ private void registerNamedCommands() {
   // =========================
   // SHOOTER AUTO EVENTS
   // =========================
+
+  NamedCommands.registerCommand(
+    "ShootFarFeedSeq",
+    robotCommands.autoShotWithIntakeSequence(Constants.FlywheelConstants.AUTO_FAR_RPM)
+);
+
 
   // Close auto shot RPM
   NamedCommands.registerCommand(
@@ -412,7 +422,7 @@ operatorXbox.y().onTrue(robotCommands.shootRPMCommand(4700));
 operatorXbox.rightBumper().onTrue(robotCommands.shootRPMCommand(5000));
 
 // Very high / pass-style shot
-operatorXbox.leftBumper().onTrue(robotCommands.shootRPMCommand(6300));
+operatorXbox.leftBumper().onTrue(robotCommands.PassRPM(6300));
 
   }
 }

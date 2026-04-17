@@ -97,7 +97,7 @@ public static final class IntakeConstants {
 
   // Preset positions
   public static final double SLIDER_RETRACTED_POSITION = 0.0;
-  public static final double SLIDER_EXTENDED_POSITION = 10.450;
+  public static final double SLIDER_EXTENDED_POSITION = 11.750;
   public static final double SLIDER_FEED_POSITION = 4.0;
 
   // Manual control
@@ -158,10 +158,10 @@ public static final class FlywheelConstants {
   public static final double NORMAL_SHOT_RPM = 4600.0;
 
   // Lower RPM preset for closer shots.
-  public static final double CLOSE_SHOT_RPM = 5000.0;
+  public static final double CLOSE_SHOT_RPM = 5200.0;
 
   // Higher RPM preset for farther shots.
-  public static final double FAR_SHOT_RPM = 6000.0;
+  public static final double FAR_SHOT_RPM = 6200.0;
 
 
   // =========================
