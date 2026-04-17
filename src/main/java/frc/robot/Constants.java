@@ -97,7 +97,7 @@ public static final class IntakeConstants {
 
   // Preset positions
   public static final double SLIDER_RETRACTED_POSITION = 0.0;
-  public static final double SLIDER_EXTENDED_POSITION = 10.30;
+  public static final double SLIDER_EXTENDED_POSITION = 10.450;
   public static final double SLIDER_FEED_POSITION = 4.0;
 
   // Manual control
@@ -126,7 +126,7 @@ public static final class IntakeConstants {
     public static final boolean INDEXER_INVERTED = false;
     public static final boolean SPINDEXER_INVERTED = false;
     public static final int CURRENT_LIMIT = 40;
-    public static final double FEED_POWER = 0.35;
+    public static final double FEED_POWER = 0.45;
     public static final double REVERSE_POWER = -0.40;
   }
 
@@ -147,7 +147,7 @@ public static final class FlywheelConstants {
   // Gear ratio from MOTOR to FLYWHEEL.
   // Example here: 11 tooth driving 18 tooth = motor spins 18/11 times per 1 flywheel rotation.
   // IMPORTANT: use decimals so Java does NOT do integer division.
-  public static final double MOTOR_TO_FLYWHEEL_RATIO = 18.0 / 11.0;
+  public static final double MOTOR_TO_FLYWHEEL_RATIO = 1.0;
 
 
   // =========================
@@ -155,10 +155,10 @@ public static final class FlywheelConstants {
   // =========================
 
   // Main everyday teleop shot.
-  public static final double NORMAL_SHOT_RPM = 5600.0;
+  public static final double NORMAL_SHOT_RPM = 4600.0;
 
   // Lower RPM preset for closer shots.
-  public static final double CLOSE_SHOT_RPM = 5200.0;
+  public static final double CLOSE_SHOT_RPM = 5000.0;
 
   // Higher RPM preset for farther shots.
   public static final double FAR_SHOT_RPM = 6000.0;
@@ -196,7 +196,7 @@ public static final class FlywheelConstants {
   // Battery-side current limit.
   // Raise if the shooter feels weak.
   // Lower if battery voltage drops too much.
-  public static final double SUPPLY_CURRENT_LIMIT = 75.0;
+  public static final double SUPPLY_CURRENT_LIMIT = 70.0;
 
   // Motor-side torque current limit.
   // This affects how hard the flywheel can recover after a shot.
@@ -215,15 +215,15 @@ public static final class FlywheelConstants {
   public static final double kS = 0.30;
 
   // kV holds steady-state RPM.
-  public static final double kV = 0.12;
+  public static final double kV = 0.125;
 
   // kA helps recovery during rapid fire.
   // WARNING: 0.64 is unusually high. Keep it only if it truly works on your robot.
-  public static final double kA = 0.64;
+  public static final double kA = 0.7;
 
   // PID terms.
   // kP helps fix RPM error.
-  public static final double kP = 0.26;
+  public static final double kP = 0.3;
 
   // Usually 0 for shooters unless you know you need it.
   public static final double kI = 0.0;

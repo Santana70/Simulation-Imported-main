@@ -1,0 +1,43 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Hub Cent"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootClose"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Feed Intake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stow Intake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootClose"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

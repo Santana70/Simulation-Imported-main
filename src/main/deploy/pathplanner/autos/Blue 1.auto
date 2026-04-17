@@ -7,25 +7,7 @@
         {
           "type": "named",
           "data": {
-            "name": "ShootFar"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "Deploy Intake"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.0
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "StopShooter"
           }
         },
         {
@@ -68,6 +50,24 @@
           "type": "named",
           "data": {
             "name": "ShootFar"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 3.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopShooter"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake On"
           }
         }
       ]

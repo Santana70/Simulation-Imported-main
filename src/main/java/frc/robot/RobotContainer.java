@@ -97,25 +97,26 @@ public class RobotContainer {
 // This creates a USB camera stream for the driver.
 // The camera must be plugged into the RoboRIO USB port.
 
-UsbCamera driverCamera = CameraServer.startAutomaticCapture(); 
+// UsbCamera driverCamera = CameraServer.startAutomaticCapture(); 
  //TODO mark out with "//" before line of code to turn off camera if you don't have one or want to save resources
 
 // Set camera resolution.
 // 1280x720 = 720p (good quality without too much lag)
-driverCamera.setResolution(1280, 720); //TODO same here
+// driverCamera.setResolution(1280, 720); //TODO same here
 
 // Set frame rate.
 // 30 FPS is smooth without overloading bandwidth.
-driverCamera.setFPS(30); //TODO same here
+// driverCamera.setFPS(30); //TODO same here
 
 // Rotate the image 180 degrees.
 // Useful if the camera is mounted upside down.
-VideoSink cameraServer = CameraServer.getServer();//TODO same here
-cameraServer.setSource(driverCamera);//TODO same here
+// VideoSink cameraServer = CameraServer.getServer();//TODO same here
+// cameraServer.setSource(driverCamera);//TODO same here
 
 // Apply rotation setting
-driverCamera.setConfigJson("""
-{"rotation": 180}""");}
+// driverCamera.setConfigJson("""
+// {"rotation": 0}""");
+}
 //TODO same here
   // ==================== Autonomous Setup ====================
 
@@ -125,6 +126,8 @@ driverCamera.setConfigJson("""
     autoChooser.addOption("MiddleDepot", "MiddleDepot");
     autoChooser.addOption("Left", "Left");
     autoChooser.addOption("Itkan Destroyer", "Itkan Destroyer");
+    autoChooser.addOption("Center", "Center");
+
   }
 private void registerNamedCommands() {
   // =========================
@@ -406,10 +409,10 @@ operatorXbox.b().onTrue(robotCommands.shootRPMCommand(4400));
 operatorXbox.y().onTrue(robotCommands.shootRPMCommand(4700));
 
 // Main competition shot
-operatorXbox.rightBumper().onTrue(robotCommands.shootRPMCommand(5400));
+operatorXbox.rightBumper().onTrue(robotCommands.shootRPMCommand(5000));
 
 // Very high / pass-style shot
-operatorXbox.leftBumper().onTrue(robotCommands.shootRPMCommand(5800));
+operatorXbox.leftBumper().onTrue(robotCommands.shootRPMCommand(6300));
 
   }
 }

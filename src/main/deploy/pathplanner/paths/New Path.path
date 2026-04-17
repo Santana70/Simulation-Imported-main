@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.75,
-        "y": 5.5
+        "x": 5.808142857142857,
+        "y": 4.115982142857143
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.739514978601996,
-        "y": 7.651355206847361
+        "x": 6.925696428571428,
+        "y": 7.079928571428571
       },
       "isLocked": false,
-      "linkedName": "BL ball 1"
+      "linkedName": "hub left"
     },
     {
       "anchor": {
@@ -20,28 +20,12 @@
         "y": 7.395394144144144
       },
       "prevControl": {
-        "x": 7.67759009009009,
-        "y": 7.507747747747748
-      },
-      "nextControl": {
-        "x": 3.2028488301871127,
-        "y": 7.31987693149228
-      },
-      "isLocked": true,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 3.1323761261261267,
-        "y": 6.322927927927928
-      },
-      "prevControl": {
-        "x": 2.744245495495496,
-        "y": 7.058333333333334
+        "x": 7.913215019405997,
+        "y": 7.410204287816449
       },
       "nextControl": null,
-      "isLocked": true,
-      "linkedName": "left shot"
+      "isLocked": false,
+      "linkedName": "BL shot 1"
     }
   ],
   "rotationTargets": [],
@@ -64,7 +48,7 @@
   "folder": "Blue 1",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": -91.5074357587749
   },
   "useDefaultConstraints": true
 }
